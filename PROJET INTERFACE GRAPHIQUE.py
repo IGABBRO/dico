@@ -11,10 +11,6 @@ def rappel():
         showwarning('Attention', 'Tant pis...')
         sys.exit()
 ##
-def separator(win):
-    tk.Separator(win, orient=HORIZONTAL).grid(sticky=E+W)
-
-##
 def remove_accents(word):
     nfkd_form = unicodedata.normalize('NFKD', word)
     return u"".join([c for c in nfkd_form if not unicodedata.combining(c)])
@@ -80,8 +76,11 @@ def synonyme(word):
             for i in range(0,len(syn_brut)-1):
                 syn_final = syn_final + syn_brut[i].text.strip() + ", "
                 syn_final = syn_final + syn_brut[len(syn_brut)].text.strip()
-    else:
+    elif len(syn_brut) == 1:
         syn_final = syn_brut[0].text.strip()
+    else:
+        syn_final = "aucun synonyme trouvé"
+
     return syn_final
 ##
 def fenetre_resultat (nom_final, nature_final, def_final, syn_final):
@@ -93,9 +92,7 @@ def fenetre_resultat (nom_final, nature_final, def_final, syn_final):
     Framebas = Frame(fenetre_resultat, width=75,bg='white')
     Framebas.grid()
     Label(Framebas, text="Genre : "+nature_final, font=(None, 14), bg='white').grid(pady=2,padx=5)
-    separator(fenetre_resultat)
     Label(Framebas, text=def_final, font=(None, 16), justify='left', bg='white').grid(padx=5)
-    separator(fenetre_resultat)
     Label(Framebas, fg='#2196F3', text="Synonymes (du plus courant au moins courant) :\n "+syn_final, font=(None, 14), bg='white').grid(pady=2,padx=5)
     fenetre_resultat.mainloop()
 
