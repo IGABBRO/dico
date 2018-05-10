@@ -5,12 +5,6 @@ from urllib.request import urlopen
 import unicodedata
 import sys
 
-##
-def rappel():
-    if askyesno('Attention', 'Êtes-vous sûr de vouloir faire ça?'):
-        showwarning('Attention', 'Tant pis...')
-        sys.exit()
-##
 def remove_accents(word):
     nfkd_form = unicodedata.normalize('NFKD', word)
     return u"".join([c for c in nfkd_form if not unicodedata.combining(c)])
