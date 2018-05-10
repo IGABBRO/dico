@@ -10,6 +10,19 @@ def remove_accents(word):
     return u"".join([c for c in nfkd_form if not unicodedata.combining(c)])
 
 ##
+def fenetre_erreur (msg):
+    fenetre_debut = Tk()
+    fenetre_debut.configure(background='#388E3C', cursor='tcross')
+    fenetre_debut.title("Selection des paramètres")
+    fenetre_debut.resizable(False, False)
+    label = Label(fenetre_debut, text="Erreur\n"+msg, fg='white', bg='#388E3C')
+    label.grid()
+    valider=Button(fenetre_debut, background='#388E3C', highlightbackground='#2E7D32', activebackground='#2E7D32', text="Valider", command=fenetre_debut.destroy, fg='white')
+    valider.grid(padx=3, pady=3)
+    return
+
+
+##
 def creation_fenetre () :
     fenetre_debut = Tk()
     fenetre_debut.configure(background='#388E3C', cursor='tcross')
@@ -32,7 +45,6 @@ def creation_fenetre () :
     fenetre_debut.mainloop()
 
     word = word.get()
-    print(word)
 
     return word
 
@@ -45,7 +57,7 @@ def definition (word):
     soup = BeautifulSoup(page, 'html.parser')
     def_brut = soup.findAll("li", attrs={"class": "DivisionDefinition"})
     for i in range(0,len(def_brut)):
-        def_final = def_final + "\n" + def_brut[i].text.strip()
+        def_final = def_final + "-\n" + def_brut[i].text.strip()
 
     nom_brut = soup.find("h2", attrs={"class": "AdresseDefinition"})
     nom_final = nom_brut.text.strip()
@@ -73,7 +85,7 @@ def synonyme(word):
     elif len(syn_brut) == 1:
         syn_final = syn_brut[0].text.strip()
     else:
-        syn_final = "aucun synonyme trouvé"
+        syn_final = "Aucun synonyme trouvé."
 
     return syn_final
 ##
@@ -83,14 +95,23 @@ def fenetre_resultat (nom_final, nature_final, def_final, syn_final):
     fenetre_resultat.title("Résultats")
     fenetre_resultat.resizable(False, False)
     Label(fenetre_resultat, text=nom_final.title(), width=20, bg='#388E3C', font=('Calibri', 20), fg='white').grid()
-    Framebas = Frame(fenetre_resultat, width=75,bg='white')
-    Framebas.grid()
+    Framebas = Frame(fenetre_resultat, width=75,bg='white').grid()
     Label(Framebas, text="Genre : "+nature_final, font=(None, 14), bg='white').grid(pady=2,padx=5)
     Label(Framebas, text=def_final, font=(None, 16), justify='left', bg='white').grid(padx=5)
     Label(Framebas, fg='#2196F3', text="Synonymes (du plus courant au moins courant) :\n "+syn_final, font=(None, 14), bg='white').grid(pady=2,padx=5)
     fenetre_resultat.mainloop()
 
 word = creation_fenetre()
+word = ''
+compteur = 0
+while compteur == 0 :
+    if word == '':
+        msg = "Pas de mot rentré !"
+        fenetre_erreur(msg)
+        word = creation_fenetre()
+        msg = ''
+    else : compteur = 1
+
 nom_final, nature_final, def_final = definition(word)
 syn_final = synonyme(word)
 fenetre_resultat(nom_final, nature_final, def_final, syn_final)
