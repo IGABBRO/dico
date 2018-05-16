@@ -5,9 +5,17 @@ from urllib.request import urlopen
 import unicodedata
 import sys
 
+close = 0
+
 def remove_accents(word):
     nfkd_form = unicodedata.normalize('NFKD', word)
     return u"".join([c for c in nfkd_form if not unicodedata.combining(c)])
+
+##
+def ask_quit():
+    if askokcancel("Quit", "You want to quit now? *sniff*"):
+        sys.exit()
+    return
 
 ##
 def fenetre_erreur (msg):
@@ -41,6 +49,7 @@ def creation_fenetre () :
     valider=Button(fenetre_debut, background='#388E3C', highlightbackground='#2E7D32', activebackground='#2E7D32', text="Valider", command=fenetre_debut.destroy, fg='white')
     valider.grid(padx=3, pady=3)
     fenetre_debut.bind("<Return>", fenetre_debut.destroy)
+    Button(fenetre_debut, background='#388E3C', highlightbackground='#2E7D32', activebackground='#2E7D32', text="Quitter", command=ask_quit, fg='white').grid(padx=3, pady=3)
 
     fenetre_debut.mainloop()
 
@@ -94,6 +103,7 @@ def fenetre_resultat (nom_final, nature_final, def_final, syn_final):
     fenetre_resultat.configure(background='#388E3C', cursor='tcross', bg='#388E3C')
     fenetre_resultat.title("Résultats")
     fenetre_resultat.resizable(False, False)
+    fenetre_resultat.protocol("WM_DELETE_WINDOW", ask_quit)
     Label(fenetre_resultat, text=nom_final.title(), width=20, bg='#388E3C', font=('Calibri', 20), fg='white').grid()
     Framebas = Frame(fenetre_resultat, width=75,bg='white').grid()
     Label(Framebas, text="Genre : "+nature_final, font=(None, 14), bg='white').grid(pady=2,padx=5)
@@ -101,7 +111,7 @@ def fenetre_resultat (nom_final, nature_final, def_final, syn_final):
     Label(Framebas, fg='#2196F3', text="Synonymes (du plus courant au moins courant) :\n "+syn_final, font=(None, 14), bg='white').grid(pady=2,padx=5)
 
     Button(fenetre_resultat, background='#388E3C', highlightbackground='#2E7D32', activebackground='#2E7D32', text="Retour", command=fenetre_resultat.destroy, fg='white').grid(padx=3, pady=3)
-
+    Button(fenetre_resultat, background='#388E3C', highlightbackground='#2E7D32', activebackground='#2E7D32', text="Quitter", command=ask_quit, fg='white').grid(padx=3, pady=3)
 
     fenetre_resultat.mainloop()
     return
@@ -122,15 +132,9 @@ def test_word(word):
 #        word = creation_fenetre()
 #        msg = ''
 #    else : compteur = 1
-# c'était une bonne idée le while mais ya plus simple
-#msg = "Pas de mot rentré !"
-#while word=='':
-#    fenetre_erreur(msg)
-#    word = creation_fenetre()
-#    nom_final, nature_final, def_final = definition(word)
-#syn_final = synonyme(word)
-#fenetre_resultat(nom_final, nature_final, def_final, syn_final)
-#
+# c'était une bonne idée le while mais ya plus simple j'ai tout mis dans une fonction après
+
+##
 def main():
     word = creation_fenetre()
     test_word(word)
@@ -140,8 +144,8 @@ def main():
 
     fenetre_resultat(nom_final, nature_final, def_final, syn_final)
     return
-
-close = 0
+##
 if __name__ == "__main__":
     while close == 0:
         main()
+    sys.exit()
