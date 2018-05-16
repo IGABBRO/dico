@@ -11,13 +11,13 @@ def remove_accents(word):
 
 ##
 def fenetre_erreur (msg):
-    fenetre_debut = Tk()
-    fenetre_debut.configure(background='#388E3C', cursor='tcross')
-    fenetre_debut.title("Selection des paramètres")
-    fenetre_debut.resizable(False, False)
-    label = Label(fenetre_debut, text="Erreur\n"+msg, fg='white', bg='#388E3C')
+    fenetre_erreur = Tk()
+    fenetre_erreur.configure(background='#388E3C', cursor='tcross')
+    fenetre_erreur.title("Selection des paramètres")
+    fenetre_erreur.resizable(False, False)
+    label = Label(fenetre_erreur, text="Erreur\n"+msg, fg='white', bg='#388E3C')
     label.grid()
-    valider=Button(fenetre_debut, background='#388E3C', highlightbackground='#2E7D32', activebackground='#2E7D32', text="Valider", command=fenetre_debut.destroy, fg='white')
+    valider=Button(fenetre_erreur, background='#388E3C', highlightbackground='#2E7D32', activebackground='#2E7D32', text="Valider", command=fenetre_debut.destroy, fg='white')
     valider.grid(padx=3, pady=3)
     return
 
@@ -102,15 +102,20 @@ def fenetre_resultat (nom_final, nature_final, def_final, syn_final):
     fenetre_resultat.mainloop()
 
 word = creation_fenetre()
-word = ''
+# word = '' <-- forcément si tu réinitialisait word a chaque fois ca risquait pas de marcher
 compteur = 0
-while compteur == 0 :
-    if word == '':
-        msg = "Pas de mot rentré !"
-        fenetre_erreur(msg)
-        word = creation_fenetre()
-        msg = ''
-    else : compteur = 1
+#while compteur == 0 :
+#    if word == '':
+#        msg = "Pas de mot rentré !"
+#        fenetre_erreur(msg)
+#        word = creation_fenetre()
+#        msg = ''
+#    else : compteur = 1
+# c'était une bonne idée le while mais ya plus simple
+msg = "Pas de mot rentré !"
+while word=='':
+    fenetre_erreur(msg)
+    word = creation_fenetre()
 
 nom_final, nature_final, def_final = definition(word)
 syn_final = synonyme(word)
